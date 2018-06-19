@@ -1,6 +1,6 @@
 # Website-Template
 Tools: Gulp, SASS, Pug, Livereload
 
-Steps:
+# Steps
 npm install
 gulp

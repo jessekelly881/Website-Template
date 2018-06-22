@@ -7,6 +7,9 @@ var cleanCSS 	= require('gulp-clean-css');
 var rename 	= require("gulp-rename");
 var livereload  = require('gulp-livereload');
 var plumber     = require('gulp-plumber');
+var shell     = require('gulp-shell');
+
+gulp.task('markdown', shell.task('python static-gen-v1.0.py'));
 
 gulp.task('pug', function buildHTML(){
   return gulp.src('src/pug/*.pug')
@@ -14,6 +17,8 @@ gulp.task('pug', function buildHTML(){
   .pipe(pug({pretty: true}))
   .pipe(gulp.dest('build'))
   .pipe(livereload());
+
+  gulp.start('markdown');
 });
 
 gulp.task('sass', function () {
@@ -28,11 +33,12 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function () { //TODO: Stop the produced css file from triggering recompile
   livereload.listen({reloadPage:'build/index.html'});
+  gulp.watch('./src/markdown/**/*.md', ['markdown']);
   gulp.watch('./src/sass/**/*.sass', ['sass']); //Whenever a file in the css folder changes recompile the sass files
   gulp.watch('./src/pug/**/*.pug', ['pug']);  //Whenever a file in the pug folder changes recompile the pug files
 });
 
-gulp.task('default', ['watch', 'sass', 'pug']);
+gulp.task('default', ['watch', 'sass', 'pug', 'markdown']);
 
 
 /*
